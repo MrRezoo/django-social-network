@@ -1,6 +1,6 @@
 # django-social-network
 
-![python](icon.png)
+![python](icon.jpg)
 
 Hello friends of this [Mr.Rezoo](https://www.linkedin.com/in/mrrezoo/)
 
