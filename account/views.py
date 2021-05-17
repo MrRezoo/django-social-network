@@ -6,6 +6,8 @@ from account.forms import UserLoginForm, UserRegistrationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 
+from posts.models import Post
+
 
 def user_login(request):
     if request.method == "POST":
@@ -46,4 +48,5 @@ def user_logout(request):
 
 def user_dashboard(request, user_id):
     user = get_object_or_404(User, pk=user_id)
-    return render(request, 'account/dashboard.html', {'user': user})
+    posts = Post.objects.filter(user=user)
+    return render(request, 'account/dashboard.html', {'user': user, 'posts': posts})

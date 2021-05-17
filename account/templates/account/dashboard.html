@@ -5,5 +5,18 @@
 {% endblock %}
 
 {% block content %}
-    <h4>{{ user.username }}</h4>
+    <h4 class="text-center">{{ user.username|capfirst }}</h4>
+    <p class="text-center">{{ user.profile.bio }}</p>
+    <br>
+    <br>
+    <br>
+
+    {% for post in posts %}
+        <div class="card">
+            <p class="card-body"><a href="{{ post.get_absolute_url }}">{{ post.body }}</a></p>
+        </div>
+        {% empty %}
+        this user has no post
+    {% endfor %}
+
 {% endblock %}
