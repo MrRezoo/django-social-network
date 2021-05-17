@@ -10,5 +10,5 @@ def all_posts(request):
 
 
 def post_detail(request, year, month, day, slug):
-    post = get_object_or_404(Post, created__year=year, created__month=month, created__day=day, created__slug=slug)
-    return render(request,'posts/post_detail.html',{'post':post})
+    post = get_object_or_404(Post, created__year=year, created__month=month, created__day=day,slug=slug)
+    return render(request, 'posts/post_detail.html', {'post': post})
