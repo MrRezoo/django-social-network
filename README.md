@@ -16,7 +16,7 @@ Hello friends of this [Mr.Rezoo](https://www.linkedin.com/in/mrrezoo/)
 
 ## General info
 
-Work on sample Blog with Django language . . .
+Work on sample social network with Django language . . .
 
 Some features we worked on
 
