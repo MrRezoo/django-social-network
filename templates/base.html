@@ -12,10 +12,10 @@
 </head>
 <body>
 
-{% include 'external/navbar.html' %}
+{% include 'layouts/navbar.html' %}
 
 <div class="bg-light p-5 rounded-lg m-3">
-    {% include 'messages.html' %}
+    {% include 'external/messages.html' %}
     <h1 class="display-4"> {% block title-head %} {% endblock %}</h1>
     <p class="lead"> {% block lead %} {% endblock %}</p>
     <p> {% block content %} {% endblock %}</p>
