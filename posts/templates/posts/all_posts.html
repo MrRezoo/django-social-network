@@ -13,5 +13,6 @@
             <p class="card-header"><a href="{% url 'account:dashboard' post.user.id %}">{{ post.user }}</a></p>
             <p class="card-body"><a href="{{ post.get_absolute_url }}">{{ post.body }}</a></p>
         </div>
+        <br>
     {% endfor %}
 {% endblock %}

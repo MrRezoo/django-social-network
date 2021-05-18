@@ -5,7 +5,9 @@
 {% endblock %}
 
 {% block content %}
-    <a href="{% url 'posts:add_post' request.user.id %}" class="btn btn-danger">Add post</a>
+    {% if self_dash %}
+        <a href="{% url 'posts:add_post' request.user.id %}" class="btn btn-primary">Add post</a>
+    {% endif %}
     <h4 class="text-center">{{ user.username|capfirst }}</h4>
     <p class="text-center">{{ user.profile.bio }}</p>
     <br>

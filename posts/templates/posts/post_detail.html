@@ -5,9 +5,11 @@
 
 
 {% block content %}
+    {% if request.user.is_authenticated and request.user.id == post.user.id %}
+        <a href="{% url 'posts:post_delete' post.user.id post.id %}" class="btn btn-danger">Delete post</a>
+    {% endif %}
 
-
-            <p class="card-header">{{ post.user }} | {{ post.created|date }}</p>
-            <p class="card-body"><a href="{{ post.get_absolute_url }}">{{ post.body }}</a></p>
+    <p class="card-header">{{ post.user }} | {{ post.created|date }}</p>
+    <p class="card-body">{{ post.body }}</p>
 
 {% endblock %}

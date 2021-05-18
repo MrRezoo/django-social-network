@@ -20,15 +20,28 @@ def post_detail(request, year, month, day, slug):
 
 @login_required
 def add_post(request, user_id):
-    if request.method == 'POST':
-        form = AddPostForm(request.POST)
-        if form.is_valid():
-            new_post = form.save(commit=False)
-            new_post.user = request.user
-            new_post.slug = slugify(form.cleaned_data['body'][:30])
-            new_post.save()
-            messages.success(request, 'post submitted', 'success')
-            return redirect('account:dashboard', user_id)
+    if request.user.id == user_id:
+        if request.method == 'POST':
+            form = AddPostForm(request.POST)
+            if form.is_valid():
+                new_post = form.save(commit=False)
+                new_post.user = request.user
+                new_post.slug = slugify(form.cleaned_data['body'][:30])
+                new_post.save()
+                messages.success(request, 'post submitted', 'success')
+                return redirect('account:dashboard', user_id)
+        else:
+            form = AddPostForm()
+        return render(request, 'posts/add_post.html', {'form': form})
     else:
-        form = AddPostForm()
-    return render(request, 'posts/add_post.html', {'form': form})
+        return redirect('posts:all_posts')
+
+
+@login_required
+def post_delete(request, user_id, post_id):
+    if request.user.id == user_id:
+        Post.objects.get(pk=post_id).delete()
+        messages.success(request, 'your post deleted successfully', 'danger')
+        return redirect('account:dashboard', user_id)
+    else:
+        return redirect('posts:all_posts')
