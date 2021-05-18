@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block content %}
+    <a href="{% url 'posts:add_post' request.user.id %}" class="btn btn-danger">Add post</a>
     <h4 class="text-center">{{ user.username|capfirst }}</h4>
     <p class="text-center">{{ user.profile.bio }}</p>
     <br>
@@ -15,7 +16,7 @@
         <div class="card">
             <p class="card-body"><a href="{{ post.get_absolute_url }}">{{ post.body }}</a></p>
         </div>
-        {% empty %}
+    {% empty %}
         this user has no post
     {% endfor %}
 
