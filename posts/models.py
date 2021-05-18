@@ -21,9 +21,9 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    reply = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    reply = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
     is_reply = models.BooleanField(default=False)
     body = models.TextField(max_length=400)
     created = models.DateTimeField(auto_now_add=True)
@@ -31,3 +31,6 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.body[:30]}"
+
+    class Meta:
+        ordering = ('-created',)
