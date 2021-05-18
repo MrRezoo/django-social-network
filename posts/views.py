@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.text import slugify
 
 # Create your views here.
-from posts.forms import AddPostForm
+from posts.forms import AddPostForm, EditPostForm
 from posts.models import Post
 
 
@@ -43,5 +43,24 @@ def post_delete(request, user_id, post_id):
         Post.objects.get(pk=post_id).delete()
         messages.success(request, 'your post deleted successfully', 'danger')
         return redirect('account:dashboard', user_id)
+    else:
+        return redirect('posts:all_posts')
+
+
+@login_required
+def post_edit(request, user_id, post_id):
+    if request.user.id == user_id:
+        post = get_object_or_404(Post, pk=post_id)
+        if request.method == 'POST':
+            form = EditPostForm(request.POST, instance=post)
+            if form.is_valid():
+                new_post = form.save(commit=False)
+                new_post.slug = slugify(form.cleaned_data['body'][:30])
+                new_post.save()
+                messages.success(request, 'your post edited successfully', 'success')
+                return redirect('account:dashboard', user_id)
+        else:
+            form = EditPostForm(instance=post)
+            return render(request, 'posts/edit_post.html', {'form': form})
     else:
         return redirect('posts:all_posts')
