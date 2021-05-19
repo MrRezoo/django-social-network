@@ -1,5 +1,7 @@
 from django import forms
 
+from account.models import Profile
+
 messages = {
     'required': 'این فیلد اجباری است',
     'invalid': 'لطفا یک ایمیل معتبر وارد کنید',
@@ -24,3 +26,32 @@ class UserRegistrationForm(forms.Form):
 
     password = forms.CharField(error_messages=messages, max_length=40, widget=forms.PasswordInput(
         attrs={'class': 'form-control', 'placeholder': 'password', 'type': 'password'}))
+
+
+class EditProfileForm(forms.ModelForm):
+    username = forms.CharField()
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    email = forms.EmailField()
+
+    class Meta:
+        model = Profile
+        fields = ('bio', 'age', 'phone')
+        widgets = {
+            'bio': forms.Textarea(attrs={'class': 'form-control', 'style': 'height: 100px'}),
+            'age': forms.NumberInput(attrs={'class': 'form-control'}),
+            'phone': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
+
+
+class PhoneLoginForm(forms.Form):
+    phone = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+
+    def clean_phone(self):
+        phone = Profile.objects.filter(phone=self.cleaned_data.get('phone'))
+        if not phone.exists():
+            raise forms.ValidationError('This phone number does not exists')
+        return self.cleaned_data.get('phone')
+
+class VerifyCodeForm(forms.Form):
+    code = forms.IntegerField()

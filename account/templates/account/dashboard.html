@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}
     {{ user.username }} profile
 {% endblock %}
@@ -7,9 +7,19 @@
 {% block content %}
     {% if self_dash %}
         <a href="{% url 'posts:add_post' request.user.id %}" class="btn btn-primary">Add post</a>
+        <a class="btn btn-primary" href="{% url 'account:profile_edit' request.user.id %}">Edit Profile</a>
     {% endif %}
     <h4 class="text-center">{{ user.username|capfirst }}</h4>
     <p class="text-center">{{ user.profile.bio }}</p>
+    {% if request.user.id != user.id and not is_following %}
+        <div class="text-center">
+            <button id="following_btn" data-id="{{ user.id }}" class="btn btn-primary">follow</button>
+        </div>
+    {% elif request.user.id != user.id and  is_following %}
+        <div class="text-center">
+            <button id="following_btn" data-id="{{ user.id }}" class="btn btn-warning">unfollow</button>
+        </div>
+    {% endif %}
     <br>
     <br>
     <br>
@@ -22,4 +32,9 @@
         this user has no post
     {% endfor %}
 
+{% endblock %}
+
+
+{% block script %}
+    <script src="{% static 'account/js/script.js' %}"></script>
 {% endblock %}
