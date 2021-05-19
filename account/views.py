@@ -136,7 +136,7 @@ def verify(request, phone, rand_num):
 @login_required
 def follow(request):
     if request.method == 'POST':
-        user_id = request.POST('user_id')
+        user_id = request.POST['user_id']
         following = get_object_or_404(User, pk=user_id)
         check_relation = Relation.objects.filter(from_user=request.user, to_user=following)
         if check_relation.exists():
@@ -149,7 +149,7 @@ def follow(request):
 @login_required
 def unfollow(request):
     if request.method == 'POST':
-        user_id = request.POST('user_id')
+        user_id = request.POST['user_id']
         following = get_object_or_404(User, pk=user_id)
         check_relation = Relation.objects.filter(from_user=request.user, to_user=following)
         if check_relation.exists():
