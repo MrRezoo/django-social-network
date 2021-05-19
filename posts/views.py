@@ -6,7 +6,7 @@ from django.utils.text import slugify
 
 # Create your views here.
 from posts.forms import AddPostForm, EditPostForm, AddCommentForm, AddReplyForm
-from posts.models import Post, Comment
+from posts.models import Post, Comment, Vote
 
 
 def all_posts(request):
@@ -18,6 +18,10 @@ def post_detail(request, year, month, day, slug):
     post = get_object_or_404(Post, created__year=year, created__month=month, created__day=day, slug=slug)
     comments = Comment.objects.filter(post=post, is_reply=False)
     reply_form = AddReplyForm()
+    can_like = False
+    if request.user.is_authenticated:
+        if post.user_can_like(request.user):
+            can_like = True
     if request.method == 'POST':
         form = AddCommentForm(request.POST)
         if form.is_valid():
@@ -29,7 +33,7 @@ def post_detail(request, year, month, day, slug):
     else:
         form = AddCommentForm()
     return render(request, 'posts/post_detail.html', {'post': post, 'comments': comments, 'form': form,
-                                                      'reply_form': reply_form})
+                                                      'reply_form': reply_form, 'can_like': can_like})
 
 
 @login_required
@@ -82,7 +86,6 @@ def post_edit(request, user_id, post_id):
 
 @login_required
 def add_reply(request, post_id, comment_id):
-
     post = get_object_or_404(Post, pk=post_id)
     comment = get_object_or_404(Comment, pk=comment_id)
 
@@ -98,4 +101,21 @@ def add_reply(request, post_id, comment_id):
             reply.save()
             messages.success(request, 'you replied comment successfully', 'success')
 
+    return redirect('posts:post_detail', post.created.year, post.created.month, post.created.day, post.slug)
+
+
+@login_required
+def post_like(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    like = Vote(post=post, user=request.user)
+    like.save()
+    messages.success(request, 'you liked successfully', 'success')
+    return redirect('posts:post_detail', post.created.year, post.created.month, post.created.day, post.slug)
+
+
+def post_dislike(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    like = get_object_or_404(Vote, post=post, user=request.user)
+    like.delete()
+    messages.success(request, 'you disliked successfully', 'warning')
     return redirect('posts:post_detail', post.created.year, post.created.month, post.created.day, post.slug)

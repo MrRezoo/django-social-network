@@ -15,6 +15,14 @@
     <hr/>
 
     {% if request.user.is_authenticated %}
+        {% if can_like %}
+            <a href="{% url 'posts:post_like' post.id %}"
+               class="btn btn-primary col-md-2 ">Like {{ post.likes_counter }} </a>
+        {% else %}
+            <a href="{% url 'posts:post_dislike' post.id %}"
+               class="btn btn-primary col-md-2 ">Dislike {{ post.likes_counter }} </a>
+        {% endif %}
+        <br/><br/>
         <form action="" method="post" novalidate class="col-md-4">
             {% csrf_token %}
             {{ form.as_p }}

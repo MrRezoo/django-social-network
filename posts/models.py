@@ -19,6 +19,18 @@ class Post(models.Model):
         return reverse('posts:post_detail',
                        args=[self.created.year, self.created.month, self.created.day, self.slug])
 
+    def likes_counter(self):
+        return self.votes.count()
+
+    def user_can_like(self, user):
+        user_like = user.votes.all()
+        query_str = user_like.filter(post=self)
+        if query_str.exists():
+            return False
+        return True
+
+
+
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
@@ -34,3 +46,11 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ('-created',)
+
+
+class Vote(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='votes')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='votes')
+
+    def __str__(self):
+        return f"{self.user} liked {self.post.slug}"
