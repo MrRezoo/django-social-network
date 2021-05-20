@@ -20,15 +20,15 @@ Work on sample social network with Django language . . .
 
 Some features we worked on
 
-* Templates -> DjangoTemplate Engine | filter , static , ...
-* Model
-* Manager
-* Form
-* Namespace
-* Admin panel customization
-* ckeditor
-* Static file
-* Media file
+* Post
+* User Profile
+* Email Login
+* Ajax
+* Like
+* follow
+* unfollow
+* post views on redis
+
 
 ## Technologies
 
