@@ -10,7 +10,7 @@
         <a href="{% url 'posts:post_edit' post.user.id post.id %}" class="btn btn-primary">Edit post</a>
     {% endif %}
 
-    <p class="card-header">{{ post.user }} | {{ post.created|date }}</p>
+    <p class="card-header">{{ post.user }} | {{ post.created|date }} | {{ redis_views }} view{{ redis_views|pluralize }} </p>
     <p class="card-body">{{ post.body }}</p>
     <hr/>
 

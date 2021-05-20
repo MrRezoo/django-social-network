@@ -110,16 +110,21 @@ def phone_login(request):
                 'message': rand_num
             }
             api.sms_send(params)
-            return redirect('account:verify', phone, rand_num)
+
+            request.session['rand_num'] = rand_num
+            request.session['phone'] = phone
+            return redirect('account:verify')
     else:
         form = PhoneLoginForm()
     return render(request, 'account/phone_login.html', {'form': form})
 
 
-def verify(request, phone, rand_num):
+def verify(request):
     if request.method == 'POST':
         form = VerifyCodeForm(request.POST)
         if form.is_valid():
+            rand_num = request.session['rand_num']
+            phone = request.session['phone']
             if rand_num == form.cleaned_data.get('code'):
                 profile = get_object_or_404(Profile, phone=phone)
                 user = get_object_or_404(User, profile__id=profile.id)
